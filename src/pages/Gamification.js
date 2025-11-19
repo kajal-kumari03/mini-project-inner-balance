@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
-
-const API_URL = 'http://localhost:3001';
+import { API_URL } from '../config/api';
 
 const reflectionPrompts = [
   {

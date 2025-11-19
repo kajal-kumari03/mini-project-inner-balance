@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-
-const API_URL = 'http://localhost:3001';
+import { API_URL } from '../config/api';
 
 const ClientDashboard = () => {
   const { user } = useAuth();

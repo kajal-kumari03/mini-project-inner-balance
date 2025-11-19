@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-
-const API_URL = 'http://localhost:3001';
+import { API_URL } from '../config/api';
 
 const MoodTracker = () => {
   const { user } = useAuth();

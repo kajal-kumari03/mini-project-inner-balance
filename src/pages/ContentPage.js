@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-
-const API_URL = 'http://localhost:3001';
+import { API_URL } from '../config/api';
 
 const ContentPage = () => {
   const [content, setContent] = useState([]);
