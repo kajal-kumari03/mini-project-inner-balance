@@ -27,6 +27,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      // Check if API URL is configured
+      if (!API_URL || API_URL.includes('localhost')) {
+        console.error('API URL not configured. Current API_URL:', API_URL);
+        return { 
+          success: false, 
+          error: 'Backend server not configured. Please contact administrator or check environment variables.' 
+        };
+      }
+
       const response = await axios.get(`${API_URL}/users`);
       const users = response.data;
       const foundUser = users.find(
@@ -43,12 +52,28 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: 'Invalid email or password' };
       }
     } catch (error) {
-      return { success: false, error: 'Login failed. Please try again.' };
+      console.error('Login error:', error);
+      const errorMessage = error.response 
+        ? error.response.data?.message || `Server error: ${error.response.status}`
+        : error.message || 'Cannot connect to backend server. Please check if the backend is running.';
+      return { 
+        success: false, 
+        error: `Login failed: ${errorMessage}` 
+      };
     }
   };
 
   const register = async (name, email, password, userType, additionalData = {}) => {
     try {
+      // Check if API URL is configured
+      if (!API_URL || API_URL.includes('localhost')) {
+        console.error('API URL not configured. Current API_URL:', API_URL);
+        return { 
+          success: false, 
+          error: 'Backend server not configured. Please contact administrator or check environment variables.' 
+        };
+      }
+
       const response = await axios.get(`${API_URL}/users`);
       const users = response.data;
       const existingUser = users.find((u) => u.email === email);
@@ -71,7 +96,8 @@ export const AuthProvider = ({ children }) => {
 
       // Create corresponding profile
       if (userType === 'professor') {
-        const profId = Math.max(...(await axios.get(`${API_URL}/professors`)).data.map((p) => p.id), 0) + 1;
+        const profResponse = await axios.get(`${API_URL}/professors`);
+        const profId = Math.max(...profResponse.data.map((p) => p.id), 0) + 1;
         await axios.post(`${API_URL}/professors`, {
           id: profId,
           name,
@@ -83,7 +109,8 @@ export const AuthProvider = ({ children }) => {
           status: 'pending',
         });
       } else if (userType === 'client') {
-        const clientId = Math.max(...(await axios.get(`${API_URL}/clients`)).data.map((c) => c.id), 0) + 1;
+        const clientResponse = await axios.get(`${API_URL}/clients`);
+        const clientId = Math.max(...clientResponse.data.map((c) => c.id), 0) + 1;
         await axios.post(`${API_URL}/clients`, {
           id: clientId,
           name,
@@ -100,7 +127,14 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       return { success: true, user: userData };
     } catch (error) {
-      return { success: false, error: 'Registration failed. Please try again.' };
+      console.error('Registration error:', error);
+      const errorMessage = error.response 
+        ? error.response.data?.message || `Server error: ${error.response.status}`
+        : error.message || 'Cannot connect to backend server. Please check if the backend is running.';
+      return { 
+        success: false, 
+        error: `Registration failed: ${errorMessage}` 
+      };
     }
   };
 
