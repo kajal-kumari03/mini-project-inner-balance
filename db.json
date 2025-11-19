@@ -1,0 +1,540 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@innerbalance.com",
+      "password": "admin123",
+      "userType": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Dr. Sarah Johnson",
+      "email": "sarah@innerbalance.com",
+      "password": "prof123",
+      "userType": "professor"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Michael Chen",
+      "email": "michael@innerbalance.com",
+      "password": "prof123",
+      "userType": "professor"
+    },
+    {
+      "id": 4,
+      "name": "Dr. Emily Rodriguez",
+      "email": "emily@innerbalance.com",
+      "password": "prof123",
+      "userType": "professor"
+    },
+    {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "client123",
+      "userType": "client"
+    },
+    {
+      "id": 6,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "password": "client123",
+      "userType": "client"
+    }
+  ],
+  "professors": [
+    {
+      "id": 2,
+      "name": "Dr. Sarah Johnson",
+      "qualifications": "Ph.D. in Clinical Psychology, Licensed Therapist",
+      "experience": "15 years",
+      "specialization": [
+        "depression",
+        "anxiety",
+        "trauma"
+      ],
+      "availability": {
+        "monday": [
+          "09:00",
+          "10:00",
+          "14:00",
+          "15:00"
+        ],
+        "tuesday": [
+          "09:00",
+          "10:00",
+          "14:00",
+          "15:00"
+        ],
+        "wednesday": [
+          "09:00",
+          "10:00",
+          "14:00",
+          "15:00"
+        ],
+        "thursday": [
+          "09:00",
+          "10:00",
+          "14:00",
+          "15:00"
+        ],
+        "friday": [
+          "09:00",
+          "10:00"
+        ]
+      },
+      "reviews": [
+        {
+          "clientId": 5,
+          "rating": 5,
+          "comment": "Dr. Johnson helped me overcome my anxiety. Highly recommended!"
+        }
+      ],
+      "status": "approved"
+    },
+    {
+      "id": 3,
+      "name": "Dr. Michael Chen",
+      "qualifications": "M.D. Psychiatry, Cognitive Behavioral Therapy Specialist",
+      "experience": "12 years",
+      "specialization": [
+        "burnout",
+        "stress",
+        "career pressure"
+      ],
+      "availability": {
+        "monday": [
+          "10:00",
+          "11:00",
+          "16:00",
+          "17:00"
+        ],
+        "tuesday": [
+          "10:00",
+          "11:00",
+          "16:00",
+          "17:00"
+        ],
+        "wednesday": [
+          "10:00",
+          "11:00"
+        ],
+        "thursday": [
+          "10:00",
+          "11:00",
+          "16:00",
+          "17:00"
+        ],
+        "friday": [
+          "10:00",
+          "11:00",
+          "16:00",
+          "17:00"
+        ]
+      },
+      "reviews": [
+        {
+          "clientId": 6,
+          "rating": 4,
+          "comment": "Great help with work-related stress."
+        }
+      ],
+      "status": "approved"
+    },
+    {
+      "id": 4,
+      "name": "Dr. Emily Rodriguez",
+      "qualifications": "LCSW, Specialized in Family and Relationship Therapy",
+      "experience": "10 years",
+      "specialization": [
+        "relationship stress",
+        "family conflicts",
+        "loneliness",
+        "postpartum"
+      ],
+      "availability": {
+        "monday": [
+          "08:00",
+          "09:00",
+          "13:00",
+          "14:00"
+        ],
+        "tuesday": [
+          "08:00",
+          "09:00",
+          "13:00",
+          "14:00"
+        ],
+        "wednesday": [
+          "08:00",
+          "09:00",
+          "13:00",
+          "14:00"
+        ],
+        "thursday": [
+          "08:00",
+          "09:00"
+        ],
+        "friday": [
+          "08:00",
+          "09:00",
+          "13:00",
+          "14:00"
+        ]
+      },
+      "reviews": [],
+      "status": "approved"
+    }
+  ],
+  "clients": [
+    {
+      "id": 5,
+      "name": "John Doe",
+      "age": 28,
+      "issues": [
+        "anxiety",
+        "career pressure"
+      ],
+      "moodLogs": [
+        {
+          "date": "2024-01-15",
+          "mood": 6,
+          "notes": "Feeling better after session"
+        },
+        {
+          "date": "2024-01-16",
+          "mood": 7,
+          "notes": "Good day, practiced breathing exercises"
+        }
+      ],
+      "sessionHistory": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Jane Smith",
+      "age": 32,
+      "issues": [
+        "burnout",
+        "stress"
+      ],
+      "moodLogs": [
+        {
+          "date": "2024-01-14",
+          "mood": 5,
+          "notes": "Feeling overwhelmed with work"
+        }
+      ],
+      "sessionHistory": [
+        3
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": 1,
+      "clientId": 5,
+      "professorId": 2,
+      "date": "2024-01-20",
+      "time": "10:00",
+      "sessionType": "video",
+      "status": "confirmed",
+      "notes": "Discussed anxiety management techniques"
+    },
+    {
+      "id": 2,
+      "clientId": 5,
+      "professorId": 2,
+      "date": "2024-01-15",
+      "time": "14:00",
+      "sessionType": "video",
+      "status": "completed",
+      "notes": "Initial consultation completed"
+    },
+    {
+      "id": 3,
+      "clientId": 6,
+      "professorId": 3,
+      "date": "2024-01-18",
+      "time": "16:00",
+      "sessionType": "audio",
+      "status": "confirmed",
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "clientId": 5,
+      "professorId": 2,
+      "date": "2024-01-25",
+      "time": "09:00",
+      "sessionType": "chat",
+      "status": "confirmed",
+      "notes": ""
+    }
+  ],
+  "content": [
+    {
+      "id": 1,
+      "title": "Understanding Anxiety: A Comprehensive Guide",
+      "description": "Learn about anxiety, its symptoms, and effective coping strategies.",
+      "category": "anxiety",
+      "exercises": [
+        "Deep breathing: Inhale for 4 counts, hold for 4, exhale for 4",
+        "Progressive muscle relaxation",
+        "Mindfulness meditation for 10 minutes daily"
+      ],
+      "tips": [
+        "Limit caffeine intake",
+        "Establish a regular sleep schedule",
+        "Practice grounding techniques when feeling overwhelmed"
+      ],
+      "scenarios": [
+        "Exam stress",
+        "Job interviews",
+        "Social situations"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Managing Depression: Steps Towards Recovery",
+      "description": "A guide to understanding depression and finding your path to healing.",
+      "category": "depression",
+      "exercises": [
+        "Daily gratitude journaling",
+        "Light exercise or walking for 20 minutes",
+        "Connecting with supportive friends or family"
+      ],
+      "tips": [
+        "Maintain a routine even when it's difficult",
+        "Seek professional help when needed",
+        "Remember that healing is not linear"
+      ],
+      "scenarios": [
+        "Postpartum depression",
+        "Academic pressure",
+        "Loneliness"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Coping with Work Burnout",
+      "description": "Recognize burnout signs and learn strategies to restore balance.",
+      "category": "burnout",
+      "exercises": [
+        "Set clear work-life boundaries",
+        "Take regular breaks throughout the day",
+        "Practice time management techniques"
+      ],
+      "tips": [
+        "Learn to say no to excessive demands",
+        "Prioritize self-care activities",
+        "Consider discussing workload with supervisor"
+      ],
+      "scenarios": [
+        "Career pressure",
+        "Long working hours",
+        "Lack of work-life balance"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Dealing with Relationship Stress",
+      "description": "Navigate relationship challenges and improve communication.",
+      "category": "relationship stress",
+      "exercises": [
+        "Active listening practice",
+        "Conflict resolution techniques",
+        "Expressing needs clearly and respectfully"
+      ],
+      "tips": [
+        "Schedule quality time together",
+        "Seek couples therapy if needed",
+        "Focus on understanding rather than winning arguments"
+      ],
+      "scenarios": [
+        "Family conflicts",
+        "Marital issues",
+        "Friendship problems"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Overcoming Social Media Addiction",
+      "description": "Break free from excessive social media use and reduce anxiety.",
+      "category": "anxiety",
+      "exercises": [
+        "Set daily time limits for social media",
+        "Turn off notifications",
+        "Replace scrolling with meaningful activities"
+      ],
+      "tips": [
+        "Use apps to track screen time",
+        "Create phone-free zones and times",
+        "Focus on real-world connections"
+      ],
+      "scenarios": [
+        "Comparison anxiety",
+        "FOMO (Fear of Missing Out)",
+        "Sleep disruption"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Building Self-Confidence",
+      "description": "Develop a stronger sense of self-worth and confidence.",
+      "category": "self-esteem",
+      "exercises": [
+        "List your strengths and achievements",
+        "Practice positive self-talk",
+        "Set and achieve small goals"
+      ],
+      "tips": [
+        "Surround yourself with supportive people",
+        "Challenge negative thoughts",
+        "Celebrate small wins"
+      ],
+      "scenarios": [
+        "Low self-esteem",
+        "Lack of confidence",
+        "Imposter syndrome"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Postpartum Support and Recovery",
+      "description": "Supporting new mothers through postpartum challenges.",
+      "category": "postpartum",
+      "exercises": [
+        "Gentle postpartum exercises",
+        "Mindfulness and meditation",
+        "Connecting with other new mothers"
+      ],
+      "tips": [
+        "Accept help from family and friends",
+        "Prioritize rest when possible",
+        "Don't hesitate to seek professional support"
+      ],
+      "scenarios": [
+        "Postpartum depression",
+        "Baby blues",
+        "Adjustment challenges"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Managing Academic Pressure",
+      "description": "Cope with exam stress and academic challenges effectively.",
+      "category": "stress",
+      "exercises": [
+        "Create a study schedule with breaks",
+        "Practice test-taking strategies",
+        "Use relaxation techniques before exams"
+      ],
+      "tips": [
+        "Break large tasks into smaller ones",
+        "Maintain a healthy study-life balance",
+        "Seek academic support when needed"
+      ],
+      "scenarios": [
+        "Exam anxiety",
+        "Deadline pressure",
+        "Performance anxiety"
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "senderId": 5,
+      "receiverId": 2,
+      "message": "Thank you for the session today. I found the breathing exercises very helpful.",
+      "timestamp": "2024-01-15T15:30:00Z"
+    },
+    {
+      "id": 2,
+      "senderId": 2,
+      "receiverId": 5,
+      "message": "I'm so glad to hear that! Keep practicing daily. Remember, you're not alone in this journey.",
+      "timestamp": "2024-01-15T16:00:00Z"
+    },
+    {
+      "id": 3,
+      "senderId": 6,
+      "receiverId": 3,
+      "message": "I'm feeling overwhelmed with my workload. Can we discuss strategies in our next session?",
+      "timestamp": "2024-01-14T10:00:00Z"
+    },
+    {
+      "id": 4,
+      "senderId": 3,
+      "receiverId": 6,
+      "message": "Absolutely! We'll work on setting boundaries and time management. See you on the 18th.",
+      "timestamp": "2024-01-14T11:00:00Z"
+    }
+  ],
+  "gamification": [
+    {
+      "id": 1,
+      "title": "3-Minute Calm Quest",
+      "category": "anxiety",
+      "description": "A quick grounding exercise designed for students worried about exams.",
+      "steps": [
+        "Breathe in for 4 counts, hold for 4, exhale for 6.",
+        "Name 3 things you can see, 2 things you can touch, 1 thing you can hear.",
+        "Write one encouraging sentence to yourself."
+      ],
+      "reward": "Earn 5 mood coins by calming your racing mind."
+    },
+    {
+      "id": 2,
+      "title": "Burnout Break Bingo",
+      "category": "burnout",
+      "description": "A mini-game for employees feeling drained after endless meetings.",
+      "steps": [
+        "Stand up and stretch every muscle slowly.",
+        "Drink a glass of water mindfully.",
+        "Send a thank-you message to a teammate."
+      ],
+      "reward": "Earn 5 mood coins for choosing rest over hustle."
+    },
+    {
+      "id": 3,
+      "title": "Confidence Power-Up",
+      "category": "self-esteem",
+      "description": "For anyone doubting themselves before a big presentation or interview.",
+      "steps": [
+        "List one recent win, no matter how small.",
+        "Strike a power pose for 30 seconds.",
+        "Repeat: “I am capable, I am learning, I am enough.”"
+      ],
+      "reward": "Earn 5 mood coins for cheering on yourself."
+    },
+    {
+      "id": 4,
+      "title": "Social Media Detox Spin",
+      "category": "anxiety",
+      "description": "A playful challenge for those stuck in doom-scrolling loops.",
+      "steps": [
+        "Set a 20-minute timer away from screens.",
+        "Write down three offline joys you miss.",
+        "Do one of them right now (dance, doodle, walk)."
+      ],
+      "reward": "Earn 5 mood coins for reclaiming your attention."
+    },
+    {
+      "id": 5,
+      "title": "Night Owl Wind-Down",
+      "category": "insomnia",
+      "description": "Gentle game for people staring at the ceiling at 2 AM.",
+      "steps": [
+        "Dim the lights and lower the room temperature.",
+        "Read one relaxing paragraph or listen to soft music.",
+        "Journal one worry you’re parking until morning."
+      ],
+      "reward": "Earn 5 mood coins for protecting your rest."
+    }
+  ]
+}
