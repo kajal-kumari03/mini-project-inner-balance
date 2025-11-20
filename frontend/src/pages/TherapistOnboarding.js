@@ -27,7 +27,7 @@ const TherapistOnboarding = () => {
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const baseUrl = API_URL || 'http://localhost:3001';
+  const baseUrl = API_URL || 'https://inner-balance-backend.onrender.com';
 
   useEffect(() => {
     const loadProfile = async () => {
