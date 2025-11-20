@@ -12,21 +12,24 @@
       "name": "Dr. Sarah Johnson",
       "email": "sarah@innerbalance.com",
       "password": "prof123",
-      "userType": "professor"
+      "userType": "professor",
+      "applicationStatus": "approved"
     },
     {
       "id": 3,
       "name": "Dr. Michael Chen",
       "email": "michael@innerbalance.com",
       "password": "prof123",
-      "userType": "professor"
+      "userType": "professor",
+      "applicationStatus": "approved"
     },
     {
       "id": 4,
       "name": "Dr. Emily Rodriguez",
       "email": "emily@innerbalance.com",
       "password": "prof123",
-      "userType": "professor"
+      "userType": "professor",
+      "applicationStatus": "under-review"
     },
     {
       "id": 5,
@@ -41,6 +44,14 @@
       "email": "jane@example.com",
       "password": "client123",
       "userType": "client"
+    },
+    {
+      "id": 7,
+      "name": "Dr. Neha Kapoor",
+      "email": "neha@innerbalance.com",
+      "password": "prof123",
+      "userType": "professor",
+      "applicationStatus": "documents-required"
     }
   ],
   "professors": [
@@ -91,7 +102,21 @@
           "comment": "Dr. Johnson helped me overcome my anxiety. Highly recommended!"
         }
       ],
-      "status": "approved"
+      "status": "approved",
+      "applicationStatus": "approved",
+      "profileComplete": true,
+      "education": {
+        "tenthScore": "93%",
+        "twelfthScore": "95%",
+        "graduation": "B.A. Psychology - UCLA",
+        "postGraduation": "Ph.D. Clinical Psychology - Stanford University"
+      },
+      "documents": {
+        "aadhaarNumber": "XXXX-XXXX-1234",
+        "panNumber": "SARAH1234P",
+        "voterId": "SJ-55-9087",
+        "experienceCertificate": "Certified_Trauma_Specialist.pdf"
+      }
     },
     {
       "id": 3,
@@ -140,7 +165,21 @@
           "comment": "Great help with work-related stress."
         }
       ],
-      "status": "approved"
+      "status": "approved",
+      "applicationStatus": "approved",
+      "profileComplete": true,
+      "education": {
+        "tenthScore": "90%",
+        "twelfthScore": "92%",
+        "graduation": "MBBS - Johns Hopkins University",
+        "postGraduation": "MD Psychiatry - Mayo Clinic"
+      },
+      "documents": {
+        "aadhaarNumber": "XXXX-XXXX-5678",
+        "panNumber": "MICHA2345C",
+        "voterId": "MC-77-5521",
+        "experienceCertificate": "BurnoutProgramCertification.pdf"
+      }
     },
     {
       "id": 4,
@@ -184,7 +223,35 @@
         ]
       },
       "reviews": [],
-      "status": "approved"
+      "status": "under-review",
+      "applicationStatus": "under-review",
+      "profileComplete": true,
+      "education": {
+        "tenthScore": "89%",
+        "twelfthScore": "91%",
+        "graduation": "B.S. Social Work - Columbia",
+        "postGraduation": "M.S.W. - NYU"
+      },
+      "documents": {
+        "aadhaarNumber": "XXXX-XXXX-9999",
+        "panNumber": "EMILY7788Q",
+        "voterId": "ER-11-4422",
+        "experienceCertificate": "FamilyTherapyLicense.pdf"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Dr. Neha Kapoor",
+      "qualifications": "",
+      "experience": "0 years",
+      "specialization": [],
+      "availability": {},
+      "reviews": [],
+      "status": "pending",
+      "applicationStatus": "documents-required",
+      "profileComplete": false,
+      "education": {},
+      "documents": {}
     }
   ],
   "clients": [
@@ -535,6 +602,92 @@
         "Journal one worry you’re parking until morning."
       ],
       "reward": "Earn 5 mood coins for protecting your rest."
+    },
+    {
+      "id": 6,
+      "title": "Focus Flow Circuit",
+      "category": "focus",
+      "description": "Designed for employees battling notification overload and zero-focus afternoons.",
+      "steps": [
+        "Silence distractions for 15 minutes.",
+        "Write a three-bullet priority list.",
+        "Celebrate with a mindful sip of water."
+      ],
+      "reward": "Earn 8 mood coins for defending your focus zone."
+    },
+    {
+      "id": 7,
+      "title": "Joy Jar Challenge",
+      "category": "loneliness",
+      "description": "Perfect for people feeling socially disconnected or away from home.",
+      "steps": [
+        "Write down one memory that still makes you smile.",
+        "Text someone 'I appreciate you because…'.",
+        "Plan one human connection for tomorrow."
+      ],
+      "reward": "Earn 7 mood coins for nourishing your support system."
+    },
+    {
+      "id": 8,
+      "title": "Mini Power Nap Quest",
+      "category": "burnout",
+      "description": "A short rest ritual for overworked parents, founders, or students.",
+      "steps": [
+        "Set a 12 minute timer, close your eyes, breathe slowly.",
+        "When the timer ends, stretch and note one thing you’re grateful for.",
+        "Mark one task you will delegate today."
+      ],
+      "reward": "Earn 10 mood coins for choosing rest over hustle."
+    },
+    {
+      "id": 9,
+      "title": "Digital Sunset Adventure",
+      "category": "anxiety",
+      "description": "Great for teens scrolling late at night or anyone stuck doomscrolling.",
+      "steps": [
+        "Switch your phone to airplane mode for 30 minutes.",
+        "Open a physical book or journal.",
+        "Write one intention for tomorrow morning."
+      ],
+      "reward": "Earn 9 mood coins for reclaiming your evening."
+    },
+    {
+      "id": 10,
+      "title": "Courage Confetti",
+      "category": "self-esteem",
+      "description": "For anyone preparing for interviews, presentations, or new life chapters.",
+      "steps": [
+        "Record a 30-second voice note hyping yourself up.",
+        "List three strengths you want to show today.",
+        "Share one of them with a friend or mentor."
+      ],
+      "reward": "Earn 12 mood coins for backing yourself loudly."
+    }
+  ],
+  "feedback": [
+    {
+      "id": 1,
+      "sessionId": 2,
+      "clientId": 5,
+      "professorId": 2,
+      "rating": 5,
+      "moodBefore": 4,
+      "moodAfter": 8,
+      "headline": "Felt heard and hopeful",
+      "comments": "Dr. Johnson gave me breathing tools that actually worked during my interview panic.",
+      "submittedAt": "2024-01-16T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "sessionId": 3,
+      "clientId": 6,
+      "professorId": 3,
+      "rating": 4,
+      "moodBefore": 3,
+      "moodAfter": 6,
+      "headline": "Burnout roadmap unlocked",
+      "comments": "Loved the calendar detox idea. Would appreciate more worksheets.",
+      "submittedAt": "2024-01-18T18:30:00Z"
     }
   ]
 }

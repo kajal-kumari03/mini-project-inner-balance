@@ -25,6 +25,8 @@ const Navbar = () => {
     }
   };
 
+  const canSeeDailyPlay = user && (user.userType === 'client' || user.userType === 'professor');
+
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,14 +66,14 @@ const Navbar = () => {
                       Resources
                     </Link>
                     <Link
-                      to="/gamification"
+                      to="/feedback"
                       className="text-gray-700 hover:text-calm-blue px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      Daily Play
+                      Session Feedback
                     </Link>
                   </>
                 )}
-                {user.userType !== 'client' && (
+                {canSeeDailyPlay && (
                   <Link
                     to="/gamification"
                     className="text-gray-700 hover:text-calm-blue px-3 py-2 rounded-md text-sm font-medium"

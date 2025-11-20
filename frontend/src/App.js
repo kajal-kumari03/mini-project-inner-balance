@@ -15,6 +15,8 @@ import Gamification from './pages/Gamification';
 import Profile from './pages/Profile';
 import Support from './pages/Support';
 import PrivateRoute from './components/PrivateRoute';
+import TherapistOnboarding from './pages/TherapistOnboarding';
+import SessionFeedback from './pages/SessionFeedback';
 
 function App() {
   return (
@@ -37,6 +39,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ProfessorDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/professor/onboarding"
+            element={
+              <PrivateRoute>
+                <TherapistOnboarding />
               </PrivateRoute>
             }
           />
@@ -69,6 +79,14 @@ function App() {
             element={
               <PrivateRoute>
                 <MoodTracker />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <PrivateRoute>
+                <SessionFeedback />
               </PrivateRoute>
             }
           />

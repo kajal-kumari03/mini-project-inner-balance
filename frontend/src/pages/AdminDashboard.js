@@ -12,6 +12,7 @@ const AdminDashboard = () => {
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const baseUrl = API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     fetchData();
@@ -20,10 +21,10 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const [usersRes, profRes, sessionsRes, contentRes] = await Promise.all([
-        axios.get(`${API_URL}/users`),
-        axios.get(`${API_URL}/professors`),
-        axios.get(`${API_URL}/sessions`),
-        axios.get(`${API_URL}/content`),
+        axios.get(`${baseUrl}/users`),
+        axios.get(`${baseUrl}/professors`),
+        axios.get(`${baseUrl}/sessions`),
+        axios.get(`${baseUrl}/content`),
       ]);
       setUsers(usersRes.data);
       setProfessors(profRes.data);
@@ -36,28 +37,31 @@ const AdminDashboard = () => {
     }
   };
 
-  const approveProfessor = async (profId) => {
+  const updateProfessorStatus = async (profId, nextStatus) => {
     try {
-      await axios.patch(`${API_URL}/professors/${profId}`, { status: 'approved' });
-      fetchData();
-    } catch (error) {
-      console.error('Error approving professor:', error);
-    }
-  };
+      const statusPayload =
+        nextStatus === 'approved'
+          ? { status: 'approved', applicationStatus: 'approved' }
+          : { status: 'pending', applicationStatus: 'documents-required' };
 
-  const rejectProfessor = async (profId) => {
-    try {
-      await axios.patch(`${API_URL}/professors/${profId}`, { status: 'rejected' });
+      await axios.patch(`${baseUrl}/professors/${profId}`, statusPayload);
+
+      const linkedUser = users.find((u) => u.id === profId);
+      if (linkedUser) {
+        await axios.patch(`${baseUrl}/users/${linkedUser.id}`, {
+          applicationStatus: statusPayload.applicationStatus,
+        });
+      }
       fetchData();
     } catch (error) {
-      console.error('Error rejecting professor:', error);
+      console.error('Error updating professor status:', error);
     }
   };
 
   const deleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`${API_URL}/users/${userId}`);
+        await axios.delete(`${baseUrl}/users/${userId}`);
         fetchData();
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -69,7 +73,7 @@ const AdminDashboard = () => {
     totalUsers: users.length,
     totalClients: users.filter((u) => u.userType === 'client').length,
     totalProfessors: users.filter((u) => u.userType === 'professor').length,
-    pendingProfessors: professors.filter((p) => p.status === 'pending').length,
+    pendingProfessors: professors.filter((p) => p.applicationStatus && p.applicationStatus !== 'approved').length,
     totalSessions: sessions.length,
     completedSessions: sessions.filter((s) => s.status === 'completed').length,
     totalContent: content.length,
@@ -290,33 +294,65 @@ const AdminDashboard = () => {
                       Specializations:{' '}
                       {prof.specialization.join(', ')}
                     </p>
-                    <span
-                      className={`inline-block mt-2 px-3 py-1 rounded text-sm ${
-                        prof.status === 'approved'
-                          ? 'bg-green-100 text-green-800'
-                          : prof.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {prof.status}
-                    </span>
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                      <span
+                        className={`inline-block px-3 py-1 rounded text-sm ${
+                          prof.status === 'approved'
+                            ? 'bg-green-100 text-green-800'
+                            : prof.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                      >
+                        Status: {prof.status}
+                      </span>
+                      <span className="inline-block px-3 py-1 rounded text-sm bg-blue-50 text-blue-700">
+                        Application: {prof.applicationStatus || 'N/A'}
+                      </span>
+                    </div>
+                    {(prof.education || prof.documents) && (
+                      <details className="mt-3 bg-gray-50 rounded-lg p-3">
+                        <summary className="cursor-pointer text-sm text-calm-blue font-semibold">
+                          View submitted documents
+                        </summary>
+                        <div className="mt-2 space-y-1 text-sm text-gray-700">
+                          {prof.education && (
+                            <>
+                              <p>10th: {prof.education.tenthScore || 'N/A'}</p>
+                              <p>12th: {prof.education.twelfthScore || 'N/A'}</p>
+                              <p>Graduation: {prof.education.graduation || 'N/A'}</p>
+                              {prof.education.postGraduation && <p>Post Grad: {prof.education.postGraduation}</p>}
+                            </>
+                          )}
+                          {prof.documents && (
+                            <>
+                              <p>Aadhaar: {prof.documents.aadhaarNumber || 'N/A'}</p>
+                              <p>PAN: {prof.documents.panNumber || 'N/A'}</p>
+                              <p>Voter ID: {prof.documents.voterId || 'N/A'}</p>
+                              <p>Experience Proof: {prof.documents.experienceCertificate || 'N/A'}</p>
+                            </>
+                          )}
+                        </div>
+                      </details>
+                    )}
                   </div>
-                  {prof.status === 'pending' && (
+                  {prof.applicationStatus && prof.applicationStatus !== 'approved' ? (
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => approveProfessor(prof.id)}
+                        onClick={() => updateProfessorStatus(prof.id, 'approved')}
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                       >
                         Approve
                       </button>
                       <button
-                        onClick={() => rejectProfessor(prof.id)}
+                        onClick={() => updateProfessorStatus(prof.id, 'pending')}
                         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                       >
-                        Reject
+                        Needs edits
                       </button>
                     </div>
+                  ) : (
+                    <span className="text-sm text-gray-500">All checks completed.</span>
                   )}
                 </div>
               ))}

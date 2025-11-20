@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
@@ -6,29 +7,38 @@ import { API_URL } from '../config/api';
 
 const ProfessorDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [feedback, setFeedback] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [availability, setAvailability] = useState({});
   const [newMessage, setNewMessage] = useState({ receiverId: '', message: '' });
+  const baseUrl = API_URL || 'http://localhost:3001';
 
   useEffect(() => {
+    if (user?.applicationStatus === 'documents-required') {
+      navigate('/professor/onboarding', { replace: true });
+      return;
+    }
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
     try {
-      const [profRes, sessionsRes, messagesRes] = await Promise.all([
-        axios.get(`${API_URL}/professors/${user.id}`),
-        axios.get(`${API_URL}/sessions?professorId=${user.id}`),
-        axios.get(`${API_URL}/messages?receiverId=${user.id}`),
+      const [profRes, sessionsRes, messagesRes, feedbackRes] = await Promise.all([
+        axios.get(`${baseUrl}/professors/${user.id}`),
+        axios.get(`${baseUrl}/sessions?professorId=${user.id}`),
+        axios.get(`${baseUrl}/messages?receiverId=${user.id}`),
+        axios.get(`${baseUrl}/feedback?professorId=${user.id}`),
       ]);
       setProfile(profRes.data);
       setAvailability(profRes.data.availability || {});
       setSessions(sessionsRes.data);
       setMessages(messagesRes.data);
+      setFeedback(feedbackRes.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -38,7 +48,7 @@ const ProfessorDashboard = () => {
 
   const updateAvailability = async () => {
     try {
-      await axios.patch(`${API_URL}/professors/${user.id}`, {
+      await axios.patch(`${baseUrl}/professors/${user.id}`, {
         availability,
       });
       alert('Availability updated successfully!');
@@ -49,7 +59,7 @@ const ProfessorDashboard = () => {
 
   const acceptSession = async (sessionId) => {
     try {
-      await axios.patch(`${API_URL}/sessions/${sessionId}`, {
+      await axios.patch(`${baseUrl}/sessions/${sessionId}`, {
         status: 'confirmed',
       });
       fetchData();
@@ -60,7 +70,7 @@ const ProfessorDashboard = () => {
 
   const rejectSession = async (sessionId) => {
     try {
-      await axios.patch(`${API_URL}/sessions/${sessionId}`, {
+      await axios.patch(`${baseUrl}/sessions/${sessionId}`, {
         status: 'rejected',
       });
       fetchData();
@@ -79,7 +89,7 @@ const ProfessorDashboard = () => {
         message: newMessage.message,
         timestamp: new Date().toISOString(),
       };
-      await axios.post(`${API_URL}/messages`, messageData);
+      await axios.post(`${baseUrl}/messages`, messageData);
       setNewMessage({ receiverId: '', message: '' });
       fetchData();
     } catch (error) {
@@ -119,10 +129,17 @@ const ProfessorDashboard = () => {
         <h1 className="text-3xl font-bold text-calm-blue mb-6">
           Professor Dashboard
         </h1>
-        <p className="text-gray-600 mb-6">Welcome, {user.name}!</p>
+        <p className="text-gray-600 mb-6">
+          Welcome, {user.name}!{' '}
+          {profile?.applicationStatus === 'under-review' && (
+            <span className="inline-block text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full text-sm">
+              Application under review — we’ll notify you once the admin approves.
+            </span>
+          )}
+        </p>
 
         <div className="flex space-x-2 mb-6 border-b">
-          {['overview', 'sessions', 'availability', 'messages'].map((tab) => (
+          {['overview', 'sessions', 'availability', 'messages', 'feedback'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -171,6 +188,32 @@ const ProfessorDashboard = () => {
                     {profile?.status}
                   </span>
                 </p>
+                <p>
+                  <span className="font-semibold">Application:</span>{' '}
+                  <span className="px-3 py-1 rounded text-sm bg-blue-100 text-blue-800 capitalize">
+                    {profile?.applicationStatus || 'documents-required'}
+                  </span>
+                </p>
+                {profile?.education && (
+                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <p className="font-semibold text-calm-blue">Academics</p>
+                      <p>10th: {profile.education.tenthScore || 'N/A'}</p>
+                      <p>12th: {profile.education.twelfthScore || 'N/A'}</p>
+                      <p>Grad: {profile.education.graduation || 'N/A'}</p>
+                      {profile.education.postGraduation && <p>Post Grad: {profile.education.postGraduation}</p>}
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <p className="font-semibold text-calm-blue">Identity Proof</p>
+                      <p>Aadhaar: {profile.documents?.aadhaarNumber || 'N/A'}</p>
+                      <p>PAN: {profile.documents?.panNumber || 'N/A'}</p>
+                      <p>Voter ID: {profile.documents?.voterId || 'N/A'}</p>
+                      {profile.documents?.experienceCertificate && (
+                        <p>Experience Proof: {profile.documents.experienceCertificate}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -368,6 +411,38 @@ const ProfessorDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {activeTab === 'feedback' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-bold text-calm-blue mb-4">Session Feedback</h2>
+            {feedback.length === 0 ? (
+              <p className="text-gray-500">No client reflections yet. Encourage clients to share their experience.</p>
+            ) : (
+              <div className="space-y-4">
+                {feedback
+                  .slice()
+                  .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+                  .map((entry) => (
+                    <div key={entry.id} className="border rounded-xl p-4 bg-gray-50">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <h3 className="font-semibold text-calm-blue">{entry.headline}</h3>
+                        <span className="text-sm text-gray-500">
+                          Session #{entry.sessionId} · {new Date(entry.submittedAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-3 text-sm text-gray-600 mt-2">
+                        <span>Rating: {entry.rating}/5</span>
+                        <span>
+                          Mood shift: {entry.moodBefore} → {entry.moodAfter}
+                        </span>
+                      </div>
+                      {entry.comments && <p className="text-gray-700 mt-2">{entry.comments}</p>}
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
         )}
       </div>

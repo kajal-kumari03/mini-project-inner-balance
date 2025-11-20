@@ -7,8 +7,11 @@ import { API_URL } from '../config/api';
 const TherapistListing = () => {
   const [therapists, setTherapists] = useState([]);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [slotChecks, setSlotChecks] = useState({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const baseUrl = API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     fetchTherapists();
@@ -30,10 +33,14 @@ const TherapistListing = () => {
 
   const fetchTherapists = async () => {
     try {
-      const response = await axios.get(`${API_URL}/professors`);
-      const approved = response.data.filter((p) => p.status === 'approved');
+      const [profResponse, sessionsResponse] = await Promise.all([
+        axios.get(`${baseUrl}/professors`),
+        axios.get(`${baseUrl}/sessions`),
+      ]);
+      const approved = profResponse.data.filter((p) => p.status === 'approved');
       setTherapists(approved);
       setFilteredTherapists(approved);
+      setSessions(sessionsResponse.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching therapists:', error);
@@ -53,6 +60,19 @@ const TherapistListing = () => {
     'postpartum',
     'self-esteem',
   ];
+
+  const getSlotStatus = (therapist, date) => {
+    if (!date) return [];
+    const weekday = new Date(date).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const daySlots = therapist.availability?.[weekday] || [];
+    const bookedTimes = sessions
+      .filter((session) => session.professorId === therapist.id && session.date === date)
+      .map((session) => session.time);
+    return daySlots.map((time) => ({
+      time,
+      isBooked: bookedTimes.includes(time),
+    }));
+  };
 
   if (loading) {
     return (
@@ -146,6 +166,51 @@ const TherapistListing = () => {
                   </p>
                 </div>
               )}
+
+              <div className="mb-4">
+                <label className="text-sm font-semibold text-gray-600 block mb-2">
+                  Check a date for live availability
+                </label>
+                <input
+                  type="date"
+                  value={slotChecks[therapist.id] || ''}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) =>
+                    setSlotChecks((prev) => ({
+                      ...prev,
+                      [therapist.id]: e.target.value,
+                    }))
+                  }
+                  className="w-full border rounded-lg px-3 py-2 text-sm"
+                />
+                {slotChecks[therapist.id] && (
+                  <div className="mt-3 space-y-2 max-h-40 overflow-y-auto">
+                    {getSlotStatus(therapist, slotChecks[therapist.id]).length === 0 ? (
+                      <p className="text-xs text-gray-500">
+                        Therapist is not available on this day. Try another date.
+                      </p>
+                    ) : (
+                      getSlotStatus(therapist, slotChecks[therapist.id]).map((slot) => (
+                        <div
+                          key={`${therapist.id}-${slot.time}`}
+                          className="flex items-center justify-between border rounded-lg px-3 py-2 text-xs"
+                        >
+                          <span>{slot.time}</span>
+                          <span
+                            className={`px-2 py-1 rounded ${
+                              slot.isBooked
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-green-100 text-green-700'
+                            }`}
+                          >
+                            {slot.isBooked ? 'Booked' : 'Free'}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
 
               <Link
                 to={`/book-session/${therapist.id}`}

@@ -52,17 +52,21 @@ Frontend runs on https://mini-project-inner-balance-rbbo6l26j.vercel.app/
 ### Three User Types
 
 1. **Admin** - Full platform control, user management, content management
-2. **Professor/Therapist** - Profile management, session management, availability
+2. **Professor/Therapist** - Guided onboarding, document verification, session management, availability
 3. **Client/Patient** - Booking sessions, mood tracking, content access
 
 ### Key Features
 
 - User Authentication (Login/Register)
+- Therapist onboarding workspace with document verification (10th/12th/graduation marks, identity proofs, experience letters)
+- Admin review workflow with approval dashboard
 - Therapist Browsing and Filtering
-- Session Booking System
+- Live slot checker to view free/busy slots before booking
+- Session Booking System with duplicate-slot prevention
 - Mood Tracking & Daily Wellbeing Check
 - Mental Health Content/Articles
-- Gamification Activities
+- Expanded Gamification Activities (Focus Flow, Joy Jar, Courage Confetti, etc.)
+- Session Feedback journal for clients with mood-before/after tracking
 - Profile Management
 - Support/Help Page
 

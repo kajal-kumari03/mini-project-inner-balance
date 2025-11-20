@@ -143,6 +143,12 @@ const ClientDashboard = () => {
               >
                 Play a Daily Game
               </Link>
+              <Link
+                to="/feedback"
+                className="block bg-white border border-calm-blue text-calm-blue px-4 py-3 rounded-lg hover:bg-calm-blue hover:text-white transition text-center font-semibold"
+              >
+                Share Session Feedback
+              </Link>
             </div>
           </div>
 

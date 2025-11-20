@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +10,7 @@ const SessionBooking = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [therapist, setTherapist] = useState(null);
+  const [existingSessions, setExistingSessions] = useState([]);
   const [formData, setFormData] = useState({
     date: '',
     time: '',
@@ -18,21 +19,25 @@ const SessionBooking = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const baseUrl = API_URL || 'http://localhost:3001';
 
   useEffect(() => {
+    const fetchTherapist = async () => {
+      try {
+        const [therapistRes, sessionsRes] = await Promise.all([
+          axios.get(`${baseUrl}/professors/${professorId}`),
+          axios.get(`${baseUrl}/sessions?professorId=${professorId}`),
+        ]);
+        setTherapist(therapistRes.data);
+        setExistingSessions(sessionsRes.data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching therapist:', err);
+        setLoading(false);
+      }
+    };
     fetchTherapist();
-  }, []);
-
-  const fetchTherapist = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/professors/${professorId}`);
-      setTherapist(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching therapist:', error);
-      setLoading(false);
-    }
-  };
+  }, [professorId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +51,7 @@ const SessionBooking = () => {
     }
 
     try {
-      const sessionsRes = await axios.get(`${API_URL}/sessions`);
+      const sessionsRes = await axios.get(`${baseUrl}/sessions`);
       const newId = Math.max(...sessionsRes.data.map((s) => s.id), 0) + 1;
 
       const newSession = {
@@ -60,7 +65,7 @@ const SessionBooking = () => {
         notes: '',
       };
 
-      await axios.post(`${API_URL}/sessions`, newSession);
+      await axios.post(`${baseUrl}/sessions`, newSession);
       alert('Session booking request submitted! The therapist will review it.');
       navigate('/client/dashboard');
     } catch (error) {
@@ -81,6 +86,18 @@ const SessionBooking = () => {
     );
   }
 
+  const filteredTimes = useMemo(() => {
+    if (!therapist || !formData.date) return [];
+    const weekday = new Date(formData.date).toLocaleDateString('en-US', {
+      weekday: 'long',
+    }).toLowerCase();
+    const baseSlots = therapist.availability?.[weekday] || [];
+    const bookedTimes = existingSessions
+      .filter((session) => session.date === formData.date)
+      .map((session) => session.time);
+    return baseSlots.filter((slot) => !bookedTimes.includes(slot));
+  }, [therapist, existingSessions, formData.date]);
+
   if (!therapist) {
     return (
       <div className="min-h-screen bg-warm-beige">
@@ -91,10 +108,6 @@ const SessionBooking = () => {
       </div>
     );
   }
-
-  const availableTimes = therapist.availability
-    ? Object.values(therapist.availability).flat()
-    : [];
 
   return (
     <div className="min-h-screen bg-warm-beige">
@@ -187,17 +200,29 @@ const SessionBooking = () => {
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-calm-blue"
                 required
+                disabled={!formData.date}
               >
-                <option value="">Select a time</option>
-                {availableTimes.map((time) => (
+                <option value="">
+                  {formData.date ? 'Select a time' : 'Choose a date first'}
+                </option>
+                {filteredTimes.map((time) => (
                   <option key={time} value={time}>
                     {time}
                   </option>
                 ))}
               </select>
-              {availableTimes.length === 0 && (
+              {formData.date && filteredTimes.length === 0 && (
                 <p className="text-sm text-gray-500 mt-1">
-                  No available times. Please contact the therapist directly.
+                  No available times on this day. Please try another date.
+                </p>
+              )}
+              {formData.date && filteredTimes.length > 0 && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Booked slots:{' '}
+                  {existingSessions
+                    .filter((session) => session.date === formData.date)
+                    .map((session) => session.time)
+                    .join(', ') || 'none yet'}
                 </p>
               )}
             </div>

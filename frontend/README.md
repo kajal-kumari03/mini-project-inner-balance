@@ -81,11 +81,13 @@ This creates an optimized production build in the `build` folder.
 
 - User Authentication (Login/Register)
 - Three User Types: Admin, Professor/Therapist, Client
-- Therapist Browsing and Booking
+- Therapist Browsing and Booking with live slot checker
+- Therapist onboarding form for document verification (marksheets, identity proofs, certificates)
 - Mood Tracking
 - Daily Wellbeing Check
 - Mental Health Content/Articles
 - Gamification Activities
+- Session Feedback journal (clients share rating, mood before/after, headline takeaway)
 - Profile Management
 - Support/Help Page
 

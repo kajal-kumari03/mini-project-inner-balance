@@ -21,10 +21,15 @@ const Login = () => {
 
     if (result.success) {
       const userType = result.user.userType;
+      const applicationStatus = result.user.applicationStatus;
       if (userType === 'admin') {
         navigate('/admin/dashboard');
       } else if (userType === 'professor') {
-        navigate('/professor/dashboard');
+        if (applicationStatus === 'documents-required') {
+          navigate('/professor/onboarding');
+        } else {
+          navigate('/professor/dashboard');
+        }
       } else {
         navigate('/client/dashboard');
       }
