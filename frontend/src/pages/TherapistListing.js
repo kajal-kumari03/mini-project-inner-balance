@@ -11,7 +11,7 @@ const TherapistListing = () => {
   const [slotChecks, setSlotChecks] = useState({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const baseUrl = API_URL || 'http://localhost:3001';
+  const baseUrl = API_URL || 'https://inner-balance-backend.onrender.com';
 
   useEffect(() => {
     fetchTherapists();
