@@ -33,7 +33,7 @@ npm install
 npm start
 ```
 
-Backend runs on `http://localhost:3001`
+Backend runs on https://inner-balance-backend.onrender.com/
 
 ### Frontend Setup
 
