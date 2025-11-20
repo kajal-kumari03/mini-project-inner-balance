@@ -1,0 +1,15 @@
+# Render Blueprint Configuration
+# This file helps automate deployment configuration on Render
+
+services:
+  - type: web
+    name: inner-balance-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /users
+    plan: free
+

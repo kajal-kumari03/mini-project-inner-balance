@@ -1,0 +1,21 @@
+{
+  "name": "inner-balance-backend",
+  "version": "1.0.0",
+  "description": "Backend API server for Inner Balance mental wellness platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "json-server --watch db.json --port 3001"
+  },
+  "keywords": [
+    "json-server",
+    "rest-api",
+    "mental-health"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
+
