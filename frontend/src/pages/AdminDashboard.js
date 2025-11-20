@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
-  const baseUrl = API_URL || 'http://localhost:3001';
+  const baseUrl = API_URL || 'https://inner-balance-backend.onrender.com';
 
   useEffect(() => {
     fetchData();
@@ -39,10 +39,20 @@ const AdminDashboard = () => {
 
   const updateProfessorStatus = async (profId, nextStatus) => {
     try {
-      const statusPayload =
-        nextStatus === 'approved'
-          ? { status: 'approved', applicationStatus: 'approved' }
-          : { status: 'pending', applicationStatus: 'documents-required' };
+      let statusPayload = {};
+      switch (nextStatus) {
+        case 'approved':
+          statusPayload = { status: 'approved', applicationStatus: 'approved' };
+          break;
+        case 'needs-edits':
+          statusPayload = { status: 'pending', applicationStatus: 'documents-required' };
+          break;
+        case 'rejected':
+          statusPayload = { status: 'rejected', applicationStatus: 'rejected' };
+          break;
+        default:
+          statusPayload = { status: 'pending', applicationStatus: 'documents-required' };
+      }
 
       await axios.patch(`${baseUrl}/professors/${profId}`, statusPayload);
 
@@ -69,11 +79,14 @@ const AdminDashboard = () => {
     }
   };
 
+  const underReviewStatuses = ['documents-required', 'under-review'];
   const stats = {
     totalUsers: users.length,
     totalClients: users.filter((u) => u.userType === 'client').length,
     totalProfessors: users.filter((u) => u.userType === 'professor').length,
-    pendingProfessors: professors.filter((p) => p.applicationStatus && p.applicationStatus !== 'approved').length,
+    pendingProfessors: professors.filter(
+      (p) => p.applicationStatus && underReviewStatuses.includes(p.applicationStatus)
+    ).length,
     totalSessions: sessions.length,
     completedSessions: sessions.filter((s) => s.status === 'completed').length,
     totalContent: content.length,
@@ -337,7 +350,7 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   {prof.applicationStatus && prof.applicationStatus !== 'approved' ? (
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => updateProfessorStatus(prof.id, 'approved')}
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -345,14 +358,24 @@ const AdminDashboard = () => {
                         Approve
                       </button>
                       <button
-                        onClick={() => updateProfessorStatus(prof.id, 'pending')}
+                        onClick={() => updateProfessorStatus(prof.id, 'needs-edits')}
+                        className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                      >
+                        Request edits
+                      </button>
+                      <button
+                        onClick={() => updateProfessorStatus(prof.id, 'rejected')}
                         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                       >
-                        Needs edits
+                        Reject
                       </button>
                     </div>
                   ) : (
-                    <span className="text-sm text-gray-500">All checks completed.</span>
+                    <span className="text-sm text-gray-500">
+                      {prof.applicationStatus === 'rejected'
+                        ? 'Application rejected'
+                        : 'All checks completed.'}
+                    </span>
                   )}
                 </div>
               ))}
