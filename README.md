@@ -43,7 +43,7 @@ npm install
 npm start
 ```
 
-Frontend runs on `http://localhost:3000`
+Frontend runs on https://mini-project-inner-balance-rbbo6l26j.vercel.app/
 
 **Important**: Make sure to set `REACT_APP_API_URL` environment variable in frontend (see frontend README)
 
